@@ -3,16 +3,10 @@ $ErrorActionPreference = "Stop"
 [Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
 
 # TODO
-# Download and install spoon if it doesn't exist
 # Login to spoon if username/password supplied
 # neo package - add a trigger to start the neo shell as well
 # neo package - add plugins for shell tools
 # Create a new 2.2.0-M02 package
-
-# Check if spoon is installed...
-
-#Write-Host "Login to spoon..."
-#spoon login
 
 $WorkingDir = "$($PSScriptRoot)\working"
 $DownloadsDir = "$($PSScriptRoot)\downloads"
@@ -22,6 +16,37 @@ $PackagesSource = "$($PSScriptRoot)\src"
 If (!(Test-Path -Path $WorkingDir)) { New-Item -Path $WorkingDir -ItemType Directory | Out-Null }
 If (!(Test-Path -Path $DownloadsDir)) { New-Item -Path $DownloadsDir -ItemType Directory | Out-Null }
 If (!(Test-Path -Path $PackagesSource)) { New-Item -Path $PackagesSource -ItemType Directory | Out-Null }
+
+# Check if Spoon is installed
+$isSpoonInstalled = $false
+Write-Host 'Testing Spoon...'
+try {  
+  & spoon version
+  $isSpoonInstalled = $true
+} catch {
+  $isSpoonInstalled = $false
+  Write-host 'Spoon is not installed in the PATH.' -ForegroundColor Yellow
+}
+# Install Spoon if it doesn't exist
+if (!$isSpoonInstalled) {
+  $fileName = "$($DownloadsDir)\spoon-plugin.exe"
+  Write-Host "Downloading Spoon installer..."
+  Invoke-WebRequest -OutFile $fileName -Uri 'http://start.spoon.net/install'
+  if (!(Test-Path -Path $fileName)) { Throw "Error downloading spoon" }
+  Write-Host "Installing Spoon..."
+  # TODO installing doesn't wait for the process to finish so it terminates abruptly.
+  & $fileName
+
+  try {
+    Write-Debug 'Testing Spoon...'
+    & spoonx version
+  } catch {
+    Throw "Failed to install Spoon"
+  }
+}
+
+#Write-Host "Login to spoon..."
+#spoon login
 
 Function Invoke-Clean() {
   if (Test-Path -Path $WorkingDir) {
