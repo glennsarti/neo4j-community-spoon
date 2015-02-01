@@ -18,6 +18,11 @@ $WorkingDir = "$($PSScriptRoot)\working"
 $DownloadsDir = "$($PSScriptRoot)\downloads"
 $PackagesSource = "$($PSScriptRoot)\src"
 
+# Create dirs if they don't exist
+If (!(Test-Path -Path $WorkingDir)) { New-Item -Path $WorkingDir -ItemType Directory | Out-Null }
+If (!(Test-Path -Path $DownloadsDir)) { New-Item -Path $DownloadsDir -ItemType Directory | Out-Null }
+If (!(Test-Path -Path $PackagesSource)) { New-Item -Path $PackagesSource -ItemType Directory | Out-Null }
+
 Function Invoke-Clean() {
   if (Test-Path -Path $WorkingDir) {
     Write-Host "Removing working..."
