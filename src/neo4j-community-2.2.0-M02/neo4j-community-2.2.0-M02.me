@@ -1,8 +1,6 @@
-using spoonbrew/clean
-using chocolatey/chocolatey
+from spoonbrew/clean, oracle/jre:7.51
 
 env NEO4J_HOME=C:\neo4j\neo4j-community
-env JAVA_HOME=C:\Java
 
 meta title="Neo4j-Community"
 meta website="http://neo4j.com/"
@@ -13,11 +11,9 @@ batch cmd
   MKDIR C:\neo4j
   XCOPY "C:\Working\neo4j-community-2.2.0-M02-windows\neo4j-community-2.2.0-M02" C:\neo4j\neo4j-community /s /e /y /i
   ECHO * Update Neo configuration
-  COPY C:\Working\neo4j.properties        C:\neo4j\neo4j-community\conf\neo4j.properties        /y /v
-  COPY C:\Working\neo4j-server.properties C:\neo4j\neo4j-community\conf\neo4j-server.properties /y /v
-  COPY C:\Working\neo4j-wrapper.conf      C:\neo4j\neo4j-community\conf\neo4j-wrapper.conf      /y /v
-  ECHO *** Installing Java
-  C:\Working\jre-7u76-windows-x64.exe /s INSTALLDIR=C:\Java STATIC=1 WEB_JAVA=0 SPONSORS=0
+  IF EXIST C:\Working\neo4j.properties COPY C:\Working\neo4j.properties C:\neo4j\neo4j-community\conf\neo4j.properties /y /v
+  IF EXIST C:\Working\neo4j-server.properties COPY C:\Working\neo4j-server.properties C:\neo4j\neo4j-community\conf\neo4j-server.properties /y /v
+  IF EXIST C:\Working\neo4j-wrapper.conf COPY C:\Working\neo4j-wrapper.conf C:\neo4j\neo4j-community\conf\neo4j-wrapper.conf /y /v
   ECHO *** Creating bootstrap
   ECHO @ECHO OFF > C:\Bootstrap.cmd
   ECHO SET PATH=%%JAVA_HOME%%\bin;%%PATH%% >> C:\Bootstrap.cmd
