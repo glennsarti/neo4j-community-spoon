@@ -14,6 +14,7 @@ batch cmd
   IF EXIST C:\Working\neo4j.properties COPY C:\Working\neo4j.properties C:\neo4j\neo4j-community\conf\neo4j.properties /y /v
   IF EXIST C:\Working\neo4j-server.properties COPY C:\Working\neo4j-server.properties C:\neo4j\neo4j-community\conf\neo4j-server.properties /y /v
   IF EXIST C:\Working\neo4j-wrapper.conf COPY C:\Working\neo4j-wrapper.conf C:\neo4j\neo4j-community\conf\neo4j-wrapper.conf /y /v
+  IF EXIST C:\Working\Neo4jShell.ps1 COPY C:\Working\Neo4jShell.ps1 C:\neo4j\neo4j-community\bin\Neo4jShell.ps1 /y /v
   ECHO *** Creating bootstrap
   ECHO @ECHO OFF > C:\Bootstrap.cmd
   ECHO SET PATH=%%JAVA_HOME%%\bin;%%PATH%% >> C:\Bootstrap.cmd
