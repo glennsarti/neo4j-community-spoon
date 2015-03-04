@@ -1,3 +1,4 @@
+param([string]$Filter = '')
 $ErrorActionPreference = "Stop"
 
 [Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
@@ -59,7 +60,7 @@ Function Invoke-Clean() {
 
 Get-ChildItem -Path $PackagesSource | % {
   $pkgDefn = Join-Path -Path ($_.Fullname) -ChildPath 'Package-Definition.ps1'
-  if (Test-Path -Path $pkgDefn) {
+  if ( (Test-Path -Path $pkgDefn) -and ($_.Name -match $Filter) ){
     Write-Host "Found package definition file '$($pkgDefn)'" -ForegroundColor Cyan
 
     # Load the package definition
