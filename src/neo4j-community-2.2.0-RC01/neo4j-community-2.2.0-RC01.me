@@ -1,0 +1,24 @@
+from spoonbrew/clean, oracle/jre:7.51
+
+env NEO4J_HOME=C:\neo4j\neo4j-community
+
+meta title="Neo4j-Community"
+meta website="http://neo4j.com/"
+meta version="2.2.0-RC01"
+
+batch cmd
+  ECHO *** Installing Neo
+  MKDIR C:\neo4j
+  XCOPY "C:\Working\neo4j-community-2.2.0-RC01-windows\neo4j-community-2.2.0-RC01" C:\neo4j\neo4j-community /s /e /y /i
+  ECHO * Update Neo configuration
+  IF EXIST C:\Working\neo4j.properties COPY C:\Working\neo4j.properties C:\neo4j\neo4j-community\conf\neo4j.properties /y /v
+  IF EXIST C:\Working\neo4j-server.properties COPY C:\Working\neo4j-server.properties C:\neo4j\neo4j-community\conf\neo4j-server.properties /y /v
+  IF EXIST C:\Working\neo4j-wrapper.conf COPY C:\Working\neo4j-wrapper.conf C:\neo4j\neo4j-community\conf\neo4j-wrapper.conf /y /v
+  IF EXIST C:\Working\Neo4jShell.ps1 COPY C:\Working\Neo4jShell.ps1 C:\neo4j\neo4j-community\bin\Neo4jShell.ps1 /y /v
+  ECHO *** Creating bootstrap
+  ECHO @ECHO OFF > C:\Bootstrap.cmd
+  ECHO SET PATH=%%JAVA_HOME%%\bin;%%PATH%% >> C:\Bootstrap.cmd
+  ECHO CALL %%* >> C:\Bootstrap.cmd
+
+startup file CALL C:\Bootstrap.cmd C:\neo4j\neo4j-community\bin\neo4j.bat console
+startup file commandprompt=("cmd.exe")
